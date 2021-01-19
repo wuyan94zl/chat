@@ -1,4 +1,4 @@
-package chart_server
+package chart
 
 import (
 	"encoding/json"

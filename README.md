@@ -10,7 +10,11 @@
 
 gin 框架下
 ```go
+package main
 // 伪代码
+import (
+    "github.com/wuyan94zl/chart"
+)
 router := gin.Default()
 router.GET("/ws", func(c *gin.Context) {
     // DB为 gorm 数据库连接信息 类型（*gorm.DB）
@@ -18,6 +22,7 @@ router.GET("/ws", func(c *gin.Context) {
     // 123 为用户ID
     chart.Server(c.Writer, c.Request, c.Query("channel_id"), 123, DB)
 })
+router.Run(":8888")
 ```
 js
 ```html

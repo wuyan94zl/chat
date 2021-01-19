@@ -1,4 +1,4 @@
-package chart_server
+package chart
 
 func sendMessage(userId uint64, msg Message) {
 	send := ChatMessage{}
