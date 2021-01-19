@@ -9,6 +9,13 @@ var GlobHub *Hub
 
 // Framework-based operation
 func Server(w http.ResponseWriter, r *http.Request, channelId string, clientId uint64, db *gorm.DB) {
+	if GlobHub == nil{
+		GlobHub = NewServer()
+		go GlobHub.Run()
+	}
+	if clients == nil {
+		clients = make(map[uint64]*Client)
+	}
 	DB = db
 	RunWs(GlobHub, w, r, channelId, clientId)
 }

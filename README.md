@@ -11,9 +11,6 @@
 gin 框架下
 ```go
 // 伪代码
-chart.GlobHub = chartserver.NewServer() // 必要
-go chart.GlobHub.Run() // 必要
-
 router := gin.Default()
 router.GET("/ws", func(c *gin.Context) {
     // DB为 gorm 数据库连接信息 类型（*gorm.DB）

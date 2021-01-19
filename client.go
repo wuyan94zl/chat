@@ -75,6 +75,10 @@ func (c *Client) ReadMsg() {
 			}
 			break
 		}
+		if clients[c.Id] != c {
+			continue
+		}
+
 		message := Message{}
 		err = json.Unmarshal(strByte, &message)
 		message.SendTime = time.Now().Format("2006-01-02 15:04:05")

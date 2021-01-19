@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+var clients map[uint64]*Client
+
 // 管道消息
 type Message struct {
 	ChannelId string `json:"channel_id"` // 管道ID
@@ -37,6 +39,13 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register: // 注册（加入聊天室）
+			if v, ok := clients[client.Id]; ok {
+				delIds := strings.Split(v.channelId, ",")
+				for _, c := range delIds {
+					delete(h.clients[c], clients[client.Id])
+				}
+			}
+			clients[client.Id] = client
 			channelIds := strings.Split(client.channelId, ",")
 			for _, sk := range channelIds {
 				if v, ok := h.clients[sk]; ok {
