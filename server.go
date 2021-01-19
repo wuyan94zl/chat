@@ -7,19 +7,8 @@ import (
 
 var GlobHub *Hub
 
-// Independent operation
-//func RunServer(addr string) {
-//	GlobHub = NewServer()
-//	go GlobHub.Run()
-//	mux := http.NewServeMux()
-//	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-//		RunWs(GlobHub, w, r,"asd",123)
-//	})
-//	go http.ListenAndServe(addr, mux)
-//}
-
 // Framework-based operation
-func Server(w http.ResponseWriter, r *http.Request, db *gorm.DB, channelId string, clientId uint64) {
+func Server(w http.ResponseWriter, r *http.Request, channelId string, clientId uint64, db *gorm.DB) {
 	DB = db
 	RunWs(GlobHub, w, r, channelId, clientId)
 }
