@@ -6,7 +6,7 @@
 
 ### 使用
 
-使用 `gorm` 连接 `mysql` 数据库 `DB` 执行迁移表 `DB.AutoMigrate(chart.ChatMessage{})`
+使用 `gorm` 连接 `mysql` 数据库 `DB` 执行迁移表 `DB.AutoMigrate(chart.ChatMessage{})` 可选
 
 gin 框架下
 ```go
@@ -17,7 +17,8 @@ import (
 )
 router := gin.Default()
 router.GET("/ws", func(c *gin.Context) {
-    // DB为 gorm 数据库连接信息 类型（*gorm.DB）
+    // 1.DB为 gorm 数据库连接信息 类型（*gorm.DB）优先执行数据库表迁移DB.AutoMigrate(chart.ChatMessage{})
+    // 2.如没有连接数据库 则 DB 传入nil
     // c.Query("channel_id") 为管道ID 多个以 `,` 隔开,相当于当前用户能接收到多个管道的信息
     // 123 为用户ID
     chart.Server(c.Writer, c.Request, c.Query("channel_id"), 123, DB)
