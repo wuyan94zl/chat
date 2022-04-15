@@ -10,6 +10,7 @@ const (
 type Message struct {
 	ChannelId string `json:"channel_id"` // 管道ID
 	UserId    uint64 `json:"user_id"`
+	ToUserId  uint64 `json:"to_user_id"`
 	Type      uint8  `json:"type"`    // 消息类型
 	Content   string `json:"content"` // 消息内容
 	SendTime  string `json:"send_time"`

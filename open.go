@@ -51,28 +51,44 @@ func UnJoinChannelIds(uid uint64, channelIds ...string) error {
 	}
 }
 
-func SendMessageToChannelIds(uid uint64, msg string, channelIds ...string) map[string]bool {
-	c := clients[uid]
-	message := Message{
-		Content:  msg,
-		UserId:   uid,
-		Type:     msgTypeSendText,
-		SendTime: time.Now().Format("2006-01-02 15:04:05"),
-	}
-	resp := make(map[string]bool)
-	for _, channelId := range channelIds {
-		if !c.hub.clients[channelId][c] {
-			resp[channelId] = false
-			continue
+func SendMessageToUid(uid, toUId uint64, msg string) {
+	if cli, ok := clients[uid]; ok {
+		message := Message{
+			Content:  msg,
+			UserId:   uid,
+			ToUserId: toUId,
+			Type:     msgTypeSendText,
+			SendTime: time.Now().Format("2006-01-02 15:04:05"),
 		}
-		message.ChannelId = channelId
-		if sendMessage(c, message) == nil {
-			resp[channelId] = true
-		} else {
-			resp[channelId] = false
+		sendMessage(cli, message)
+	}
+}
+
+func SendMessageToChannelIds(uid uint64, msg string, channelIds ...string) map[string]bool {
+	resp := make(map[string]bool)
+	if cli, ok := clients[uid]; ok {
+		message := Message{
+			Content:  msg,
+			UserId:   uid,
+			Type:     msgTypeSendText,
+			SendTime: time.Now().Format("2006-01-02 15:04:05"),
+		}
+
+		for _, channelId := range channelIds {
+			if !cli.hub.clients[channelId][cli] {
+				resp[channelId] = false
+				continue
+			}
+			message.ChannelId = channelId
+			if sendMessage(cli, message) == nil {
+				resp[channelId] = true
+			} else {
+				resp[channelId] = false
+			}
 		}
 	}
 	return resp
+
 }
 
 func sendMessage(c *Client, msg Message) error {

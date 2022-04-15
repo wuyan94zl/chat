@@ -45,9 +45,13 @@ func (h *Hub) run() {
 			delete(clients, client.Id)
 			msgStore.LogoutServer(client.Id)
 		case message := <-h.broadcast: // 接受消息
-			for cli, _ := range h.clients[message.ChannelId] {
-				send, _ := json.Marshal(message)
-				cli.send <- send // 向客户端发消息
+			send, _ := json.Marshal(message)
+			if message.ToUserId > 0 {
+				clients[message.ToUserId].send <- send
+			} else {
+				for cli, _ := range h.clients[message.ChannelId] {
+					cli.send <- send // 向客户端发消息
+				}
 			}
 		}
 	}

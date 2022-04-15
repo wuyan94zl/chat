@@ -76,7 +76,8 @@ func (c *Client) ReadMsg() {
 		message.SendTime = time.Now().Format("2006-01-02 15:04:05")
 		message.UserId = c.Id
 
-		if _, ok := c.hub.clients[message.ChannelId][c]; !ok {
+		if message.ToUserId > 0 {
+		} else if _, ok := c.hub.clients[message.ChannelId][c]; !ok {
 			msgStore.ErrorLogServer(fmt.Errorf("用户`%d`未监听`%s`频道，不能发送消息", c.Id, message.ChannelId))
 			continue
 		}
