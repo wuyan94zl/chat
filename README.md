@@ -37,6 +37,6 @@ func (d *data) ErrorLogServer(err error) {
 依赖扩展 `gorilla/websocket`     
 
 ### 使用
-`go get github.com/wuyan94zl/chart`
+`go get github.com/wuyan94zl/chat`
 
 ### 完整示例
