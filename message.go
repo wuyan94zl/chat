@@ -1,23 +1,25 @@
 package chart
 
 const (
-	msgTypeLogin     = 1
-	msgTypeLogout    = 2
-	msgTypeSendText  = 3
-	msgTypeSendImage = 4
+	msgTypeSendText  = 1
+	msgTypeSendImage = 2
+	msgTypeSendAudio = 3
+	msgTypeSendVideo = 4
 )
 
 type Message struct {
-	ChannelId string `json:"channel_id"` // 管道ID
-	UserId    uint64 `json:"user_id"`
-	ToUserId  uint64 `json:"to_user_id"`
-	Type      uint8  `json:"type"`    // 消息类型
-	Content   string `json:"content"` // 消息内容
-	SendTime  string `json:"send_time"`
+	ChannelId string      `json:"channel_id"` // 管道ID
+	UserId    uint64      `json:"user_id"`
+	Detail    interface{} `json:"detail"`
+	ToUserId  uint64      `json:"to_user_id"`
+	Type      uint8       `json:"type"`    // 消息类型
+	Content   string      `json:"content"` // 消息内容
+	SendTime  string      `json:"send_time"`
 }
 
 type messageInterface interface {
 	SendMessage(msg Message)
+	DelaySendMessage(channelId string, msg Message, uids []uint64)
 	LoginServer(uid uint64)
 	LogoutServer(uid uint64)
 	ErrorLogServer(err error)

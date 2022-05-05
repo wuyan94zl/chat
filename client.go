@@ -15,11 +15,14 @@ type Client struct {
 	send      chan []byte
 	channelId []string
 	Id        uint64
+	Detail    interface{}
 }
 
 var clients map[uint64]*Client
 
 var upGrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
@@ -75,8 +78,11 @@ func (c *Client) ReadMsg() {
 		err = json.Unmarshal(strByte, &message)
 		message.SendTime = time.Now().Format("2006-01-02 15:04:05")
 		message.UserId = c.Id
-
+		message.Detail = c.Detail
 		if message.ToUserId > 0 {
+			if _, ok := clients[message.ToUserId]; !ok {
+				continue
+			}
 		} else if _, ok := c.hub.clients[message.ChannelId][c]; !ok {
 			msgStore.ErrorLogServer(fmt.Errorf("用户`%d`未监听`%s`频道，不能发送消息", c.Id, message.ChannelId))
 			continue

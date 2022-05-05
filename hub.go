@@ -46,11 +46,25 @@ func (h *Hub) run() {
 			msgStore.LogoutServer(client.Id)
 		case message := <-h.broadcast: // 接受消息
 			send, _ := json.Marshal(message)
+			var sent []uint64
 			if message.ToUserId > 0 {
-				clients[message.ToUserId].send <- send
+				if cli, ok := clients[message.ToUserId]; ok {
+					cli.send <- send // to one user
+					sent = append(sent, cli.Id)
+				} else {
+					if msgStore != nil {
+						msgStore.DelaySendMessage(message.ChannelId, message, sent)
+					}
+				}
 			} else {
-				for cli, _ := range h.clients[message.ChannelId] {
-					cli.send <- send // 向客户端发消息
+				if channel, ok := h.clients[message.ChannelId]; ok {
+					for cli, _ := range channel {
+						cli.send <- send // to all users
+						sent = append(sent, cli.Id)
+					}
+				}
+				if msgStore != nil {
+					msgStore.DelaySendMessage(message.ChannelId, message, sent)
 				}
 			}
 		}
