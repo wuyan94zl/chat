@@ -1,4 +1,4 @@
-module github.com/wuyan94zl/chart
+module github.com/wuyan94zl/chat
 
 go 1.18
 
