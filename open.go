@@ -65,8 +65,23 @@ func SendMessageToUid(uid, toUId uint64, msg string, tp uint8) {
 				SendTime: time.Now().Format("2006-01-02 15:04:05"),
 			}
 		}
-		fmt.Println("to uid", message, cli.Id)
 		sendMessage(cli, message)
+	}
+}
+
+func SendMessageToUids(uid uint64, msg string, tp uint8, toUIds ...uint64) {
+	if cli, ok := clients[uid]; ok {
+		message := Message{
+			Content:  msg,
+			UserId:   cli.Id,
+			Detail:   cli.Detail,
+			Type:     tp,
+			SendTime: time.Now().Format("2006-01-02 15:04:05"),
+		}
+		for _, uid := range toUIds {
+			message.ToUserId = uid
+			sendMessage(cli, message)
+		}
 	}
 }
 
